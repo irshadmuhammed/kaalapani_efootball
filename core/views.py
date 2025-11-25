@@ -118,3 +118,18 @@ def upcoming_matches(request):
     # We can also filter by round if needed, or just show all pending
     matches = Match.objects.filter(winner__isnull=True).select_related('team_a', 'team_b').order_by('id')
     return render(request, 'core/upcoming.html', {'matches': matches})
+
+def match_card_partial(request, match_id):
+    try:
+        match = Match.objects.select_related('team_a', 'team_b', 'winner').get(id=match_id)
+    except Match.DoesNotExist:
+        return HttpResponse("")
+    return render(request, 'core/includes/match_card.html', {'match': match})
+
+def standings_partial(request):
+    tournament = get_current_tournament()
+    teams = []
+    if tournament:
+        teams = tournament.teams.all().order_by('-goals_scored')
+        teams = sorted(teams, key=lambda t: t.goal_difference, reverse=True)
+    return render(request, 'core/partials/standings_rows.html', {'teams': teams})

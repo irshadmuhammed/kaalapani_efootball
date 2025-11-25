@@ -1,57 +1,50 @@
+<span class="text-xs text-slate-400 uppercase tracking-wider">Match #{{ match.id }}</span>
+<span class="text-xs font-bold {% if match.winner %}text-green-400{% else %}text-slate-500{% endif %}">
+    {% if match.winner %}Finished{% else %}Scheduled{% endif %}
+</span>
+</div>
+
+<!-- Team A -->
 <div
-    class="glass-panel rounded-xl p-4 border border-white/5 hover:border-cyan-500/50 transition-all group relative overflow-hidden">
-    <div
-        class="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000">
-    </div>
-
-    <div class="flex justify-between items-center mb-2 pb-2 border-b border-white/5">
-        <span class="text-xs text-slate-400 uppercase tracking-wider">Match #{{ match.id }}</span>
-        <span class="text-xs font-bold {% if match.winner %}text-green-400{% else %}text-slate-500{% endif %}">
-            {% if match.winner %}Finished{% else %}Scheduled{% endif %}
-        </span>
-    </div>
-
-    <!-- Team A -->
-    <div
-        class="flex justify-between items-center mb-2 {% if match.winner == match.team_a %}text-green-400 font-bold{% elif match.winner and match.winner != match.team_a %}text-slate-500{% else %}text-slate-200{% endif %}">
-        <div class="flex items-center gap-2">
-            <div class="w-6 h-6 rounded-full bg-slate-800 flex items-center justify-center overflow-hidden">
-                {% if match.team_a.logo %}
-                <img src="{{ match.team_a.logo.url }}" class="w-full h-full object-cover">
-                {% else %}
-                <span class="text-xs">🛡️</span>
-                {% endif %}
-            </div>
-            <span class="truncate max-w-[100px]">{{ match.team_a.name|default:"TBD" }}</span>
-        </div>
-        <div class="flex gap-2 font-mono text-sm">
-            {% if match.round != 'F' %}
-            <span class="text-slate-500">{{ match.score_leg1_a }}</span>
-            <span class="text-slate-500">{{ match.score_leg2_a }}</span>
+    class="flex justify-between items-center mb-2 {% if match.winner == match.team_a %}text-green-400 font-bold{% elif match.winner and match.winner != match.team_a %}text-slate-500{% else %}text-slate-200{% endif %}">
+    <div class="flex items-center gap-2">
+        <div class="w-6 h-6 rounded-full bg-slate-800 flex items-center justify-center overflow-hidden">
+            {% if match.team_a.logo %}
+            <img src="{{ match.team_a.logo.url }}" class="w-full h-full object-cover">
+            {% else %}
+            <span class="text-xs">🛡️</span>
             {% endif %}
-            <span class="text-lg font-bold">{{ match.score_a }}</span>
         </div>
+        <span class="truncate max-w-[100px]">{{ match.team_a.name|default:"TBD" }}</span>
     </div>
+    <div class="flex gap-2 font-mono text-sm">
+        {% if match.round != 'F' %}
+        <span class="text-slate-500">{{ match.score_leg1_a }}</span>
+        <span class="text-slate-500">{{ match.score_leg2_a }}</span>
+        {% endif %}
+        <span class="text-lg font-bold">{{ match.score_a }}</span>
+    </div>
+</div>
 
-    <!-- Team B -->
-    <div
-        class="flex justify-between items-center {% if match.winner == match.team_b %}text-green-400 font-bold{% elif match.winner and match.winner != match.team_b %}text-slate-500{% else %}text-slate-200{% endif %}">
-        <div class="flex items-center gap-2">
-            <div class="w-6 h-6 rounded-full bg-slate-800 flex items-center justify-center overflow-hidden">
-                {% if match.team_b.logo %}
-                <img src="{{ match.team_b.logo.url }}" class="w-full h-full object-cover">
-                {% else %}
-                <span class="text-xs">🛡️</span>
-                {% endif %}
-            </div>
-            <span class="truncate max-w-[100px]">{{ match.team_b.name|default:"TBD" }}</span>
-        </div>
-        <div class="flex gap-2 font-mono text-sm">
-            {% if match.round != 'F' %}
-            <span class="text-slate-500">{{ match.score_leg1_b }}</span>
-            <span class="text-slate-500">{{ match.score_leg2_b }}</span>
+<!-- Team B -->
+<div
+    class="flex justify-between items-center {% if match.winner == match.team_b %}text-green-400 font-bold{% elif match.winner and match.winner != match.team_b %}text-slate-500{% else %}text-slate-200{% endif %}">
+    <div class="flex items-center gap-2">
+        <div class="w-6 h-6 rounded-full bg-slate-800 flex items-center justify-center overflow-hidden">
+            {% if match.team_b.logo %}
+            <img src="{{ match.team_b.logo.url }}" class="w-full h-full object-cover">
+            {% else %}
+            <span class="text-xs">🛡️</span>
             {% endif %}
-            <span class="text-lg font-bold">{{ match.score_b }}</span>
         </div>
+        <span class="truncate max-w-[100px]">{{ match.team_b.name|default:"TBD" }}</span>
     </div>
+    <div class="flex gap-2 font-mono text-sm">
+        {% if match.round != 'F' %}
+        <span class="text-slate-500">{{ match.score_leg1_b }}</span>
+        <span class="text-slate-500">{{ match.score_leg2_b }}</span>
+        {% endif %}
+        <span class="text-lg font-bold">{{ match.score_b }}</span>
+    </div>
+</div>
 </div>
