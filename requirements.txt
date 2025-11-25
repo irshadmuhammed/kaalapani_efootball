@@ -4,3 +4,4 @@ whitenoise==6.11.0
 Pillow==11.0.0
 gunicorn==23.0.0
 dj-database-url==3.0.1
+djangorestframework==3.16.1
