@@ -22,9 +22,15 @@
                 <span class="text-xs">🛡️</span>
                 {% endif %}
             </div>
-            <span>{{ match.team_a.name|default:"TBD" }}</span>
+            <span class="truncate max-w-[100px]">{{ match.team_a.name|default:"TBD" }}</span>
         </div>
-        <span class="font-mono text-lg">{{ match.score_a }}</span>
+        <div class="flex gap-2 font-mono text-sm">
+            {% if match.round != 'F' %}
+            <span class="text-slate-500">{{ match.score_leg1_a }}</span>
+            <span class="text-slate-500">{{ match.score_leg2_a }}</span>
+            {% endif %}
+            <span class="text-lg font-bold">{{ match.score_a }}</span>
+        </div>
     </div>
 
     <!-- Team B -->
@@ -38,8 +44,14 @@
                 <span class="text-xs">🛡️</span>
                 {% endif %}
             </div>
-            <span>{{ match.team_b.name|default:"TBD" }}</span>
+            <span class="truncate max-w-[100px]">{{ match.team_b.name|default:"TBD" }}</span>
         </div>
-        <span class="font-mono text-lg">{{ match.score_b }}</span>
+        <div class="flex gap-2 font-mono text-sm">
+            {% if match.round != 'F' %}
+            <span class="text-slate-500">{{ match.score_leg1_b }}</span>
+            <span class="text-slate-500">{{ match.score_leg2_b }}</span>
+            {% endif %}
+            <span class="text-lg font-bold">{{ match.score_b }}</span>
+        </div>
     </div>
 </div>

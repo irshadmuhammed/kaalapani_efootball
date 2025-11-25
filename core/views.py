@@ -30,7 +30,9 @@ def bracket(request):
         matches = tournament.matches.all().select_related('team_a', 'team_b', 'winner')
     
     # Organize matches by round for easier template rendering
+    # Organize matches by round for easier template rendering
     rounds = {
+        'R16': [],
         'QF': [],
         'SF': [],
         'F': []
