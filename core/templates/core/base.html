@@ -115,22 +115,6 @@
                     <i class="fas fa-cog"></i> Admin Panel
                 </a>
             </div>
-
-            <!-- Navigation Tabs -->
-            <div class="flex justify-center gap-12 py-4">
-                <a href="{% url 'home' %}"
-                    class="nav-tab text-slate-400 hover:text-white font-medium flex items-center gap-2 {% if page == 'standings' %}active{% endif %}">
-                    <i class="fas fa-trophy"></i> Standings
-                </a>
-                <a href="{% url 'bracket' %}"
-                    class="nav-tab text-slate-400 hover:text-white font-medium flex items-center gap-2 {% if page == 'bracket' %}active{% endif %}">
-                    <i class="fas fa-sitemap"></i> Bracket
-                </a>
-                <a href="{% url 'top_scorers' %}"
-                    class="nav-tab text-slate-400 hover:text-white font-medium flex items-center gap-2 {% if page == 'scorers' %}active{% endif %}">
-                    <i class="fas fa-futbol"></i> Scorers
-                </a>
-            </div>
         </div>
     </div>
 
