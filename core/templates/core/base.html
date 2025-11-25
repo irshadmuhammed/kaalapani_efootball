@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Football Tournament</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                    },
+                    colors: {
+                        slate: {
+                            850: '#1e293b', // Custom dark
+                            900: '#0f172a', // Base dark
+                            950: '#020617', // Darker base
+                        },
+                        cyan: {
+                            450: '#22d3ee', // Custom cyan
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0f172a;
+            color: #e2e8f0;
+        }
+
+        .hero-bg {
+            background-image: linear-gradient(to bottom, rgba(15, 23, 42, 0.3), rgba(15, 23, 42, 1)), url('https://images.unsplash.com/photo-1518091043644-c1d4457512c6?q=80&w=2831&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .glass-nav {
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-tab {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-tab.active {
+            color: #22d3ee;
+        }
+
+        .nav-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -12px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: #22d3ee;
+            box-shadow: 0 0 10px #22d3ee;
+        }
+
+        .stat-badge {
+            background: rgba(45, 212, 191, 0.15);
+            color: #2dd4bf;
+            border: 1px solid rgba(45, 212, 191, 0.3);
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex flex-col bg-slate-900">
+
+    <!-- Hero Section -->
+    <div class="hero-bg h-[400px] w-full flex flex-col items-center justify-center text-center relative px-4">
+        <div class="mb-4">
+            <i class="fas fa-trophy text-5xl text-cyan-400 drop-shadow-[0_0_15px_rgba(34,211,238,0.5)]"></i>
+        </div>
+        <h1
+            class="text-4xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-teal-300 mb-2 drop-shadow-sm">
+            KAALAPANI eFOOTBALL tournament
+        </h1>
+        <h2 class="text-3xl md:text-5xl font-bold text-cyan-400 mb-4">2025</h2>
+        <p class="text-slate-300 text-lg font-light mb-6">Live standings, knockout bracket & top scorers</p>
+
+        <div class="flex gap-4">
+            <div class="stat-badge px-4 py-1 rounded-full text-sm font-semibold flex items-center gap-2">
+                <i class="fas fa-users"></i> 8 Teams
+            </div>
+            <div class="stat-badge px-4 py-1 rounded-full text-sm font-semibold flex items-center gap-2">
+                <i class="fas fa-futbol"></i> Top Scorers
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <div class="sticky top-0 z-50 bg-slate-900/95 border-b border-white/5 backdrop-blur-md">
+        <div class="container mx-auto px-4">
+            <!-- Top Control Bar -->
+            <div class="flex justify-between items-center py-3 border-b border-white/5">
+                <button
+                    class="w-10 h-10 rounded-lg bg-slate-800 flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-700 transition-colors">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <a href="/admin/"
+                    class="px-4 py-2 rounded-lg bg-slate-800 text-slate-300 text-sm font-semibold hover:bg-slate-700 hover:text-white transition-colors flex items-center gap-2">
+                    <i class="fas fa-cog"></i> Admin Panel
+                </a>
+            </div>
+
+            <!-- Navigation Tabs -->
+            <div class="flex justify-center gap-12 py-4">
+                <a href="{% url 'home' %}"
+                    class="nav-tab text-slate-400 hover:text-white font-medium flex items-center gap-2 {% if page == 'standings' %}active{% endif %}">
+                    <i class="fas fa-trophy"></i> Standings
+                </a>
+                <a href="{% url 'bracket' %}"
+                    class="nav-tab text-slate-400 hover:text-white font-medium flex items-center gap-2 {% if page == 'bracket' %}active{% endif %}">
+                    <i class="fas fa-sitemap"></i> Bracket
+                </a>
+                <a href="{% url 'top_scorers' %}"
+                    class="nav-tab text-slate-400 hover:text-white font-medium flex items-center gap-2 {% if page == 'scorers' %}active{% endif %}">
+                    <i class="fas fa-futbol"></i> Scorers
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <main class="container mx-auto px-4 py-8 flex-grow">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="py-8 mt-auto border-t border-white/5 bg-slate-950">
+        <div class="container mx-auto px-4 text-center text-slate-500 text-sm">
+            <div
+                class="w-10 h-10 rounded-full bg-slate-900 flex items-center justify-center mx-auto mb-4 border border-white/5">
+                <span class="text-cyan-500 font-bold">N</span>
+            </div>
+            &copy; 2024 Turbo League. All rights reserved.
+        </div>
+    </footer>
+</body>
+
+</html>
