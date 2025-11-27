@@ -9,10 +9,15 @@ def home(request):
     # Home is now a dashboard
     return render(request, 'core/home.html')
 
+from .utils import calculate_standings
+
 def standings(request):
     tournament = get_current_tournament()
     teams = []
     if tournament:
+        # Calculate standings on the fly to ensure accuracy
+        calculate_standings(tournament)
+        
         # Sort by Points (desc), then Goal Difference (desc), then Goals Scored (desc)
         teams = tournament.teams.all()
         teams = sorted(teams, key=lambda t: (t.points, t.goal_difference, t.goals_scored), reverse=True)
