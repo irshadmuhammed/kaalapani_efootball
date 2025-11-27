@@ -28,45 +28,46 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Teams -->
                 <div class="space-y-2">
-                    <label class="block text-sm font-medium text-gray-700">Team A Name</label>
-                    {{ form.team_a_name }}
-                    {% if form.team_a_name.errors %}
-                    <p class="text-red-500 text-xs mt-1">{{ form.team_a_name.errors.0 }}</p>
+                    <label class="block text-sm font-medium text-gray-700">Home Team</label>
+                    {{ form.home_team }}
+                    {% if form.home_team.errors %}
+                    <p class="text-red-500 text-xs mt-1">{{ form.home_team.errors.0 }}</p>
                     {% endif %}
                 </div>
 
                 <div class="space-y-2">
-                    <label class="block text-sm font-medium text-gray-700">Team B Name</label>
-                    {{ form.team_b_name }}
-                    {% if form.team_b_name.errors %}
-                    <p class="text-red-500 text-xs mt-1">{{ form.team_b_name.errors.0 }}</p>
+                    <label class="block text-sm font-medium text-gray-700">Away Team</label>
+                    {{ form.away_team }}
+                    {% if form.away_team.errors %}
+                    <p class="text-red-500 text-xs mt-1">{{ form.away_team.errors.0 }}</p>
                     {% endif %}
                 </div>
 
-                <!-- Round -->
+                <!-- Match Details -->
+                <div class="space-y-2">
+                    <label class="block text-sm font-medium text-gray-700">Leg Number</label>
+                    {{ form.leg }}
+                </div>
+
+                <div class="space-y-2">
+                    <label class="block text-sm font-medium text-gray-700">Date & Time</label>
+                    {{ form.match_datetime }}
+                </div>
+
+                <!-- Status -->
                 <div class="md:col-span-2 space-y-2">
-                    <label class="block text-sm font-medium text-gray-700">Round</label>
-                    {{ form.round }}
+                    <label class="block text-sm font-medium text-gray-700">Status</label>
+                    {{ form.status }}
                 </div>
 
-                <!-- Leg 1 Scores -->
+                <!-- Score -->
                 <div class="space-y-2">
-                    <label class="block text-sm font-medium text-gray-700">Leg 1 - Team A Goals</label>
-                    {{ form.score_leg1_a }}
+                    <label class="block text-sm font-medium text-gray-700">Home Goals</label>
+                    {{ form.home_goals }}
                 </div>
                 <div class="space-y-2">
-                    <label class="block text-sm font-medium text-gray-700">Leg 1 - Team B Goals</label>
-                    {{ form.score_leg1_b }}
-                </div>
-
-                <!-- Leg 2 Scores -->
-                <div class="space-y-2">
-                    <label class="block text-sm font-medium text-gray-700">Leg 2 - Team A Goals</label>
-                    {{ form.score_leg2_a }}
-                </div>
-                <div class="space-y-2">
-                    <label class="block text-sm font-medium text-gray-700">Leg 2 - Team B Goals</label>
-                    {{ form.score_leg2_b }}
+                    <label class="block text-sm font-medium text-gray-700">Away Goals</label>
+                    {{ form.away_goals }}
                 </div>
             </div>
 

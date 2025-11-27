@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Tournament, Team, Match, TopScorer
+from .models import Tournament, Team, Match, SingleMatch, TopScorer
 
 def get_current_tournament():
     # Helper to get the first tournament or None
@@ -40,7 +40,8 @@ def bracket(request):
     tournament = get_current_tournament()
     matches = []
     if tournament:
-        matches = tournament.matches.all().select_related('team_a', 'team_b', 'winner')
+        # Use Match (Fixture) model for bracket
+        matches = Match.objects.filter(tournament=tournament).select_related('team_a', 'team_b', 'winner')
     
     # Organize matches by round for easier template rendering
     rounds = {
@@ -75,7 +76,8 @@ def top_scorers(request):
 
 def upcoming_matches(request):
     # Fetch matches that are scheduled but not finished (winner is None)
-    matches = Match.objects.filter(winner__isnull=True).select_related('team_a', 'team_b').order_by('id')
+    # Using new SingleMatch model
+    matches = SingleMatch.objects.filter(status='UPCOMING').select_related('home_team', 'away_team').order_by('match_datetime')
     return render(request, 'core/upcoming.html', {'matches': matches})
 
 # --- Custom Admin Views ---
@@ -86,7 +88,7 @@ from .utils import calculate_standings, update_top_scorers
 
 @staff_member_required
 def match_list(request):
-    matches = Match.objects.all().select_related('team_a', 'team_b').order_by('-id')
+    matches = SingleMatch.objects.all().select_related('home_team', 'away_team').order_by('-id')
     return render(request, 'core/admin/match_list.html', {'matches': matches})
 
 @staff_member_required
@@ -96,8 +98,8 @@ def match_add(request):
         if form.is_valid():
             match = form.save()
             # Auto-recalculate
-            calculate_standings(match.tournament)
-            update_top_scorers(match.tournament)
+            calculate_standings(match.home_team.tournament)
+            update_top_scorers(match.home_team.tournament)
             return redirect('match_list')
     else:
         form = MatchForm()
@@ -105,13 +107,13 @@ def match_add(request):
 
 @staff_member_required
 def match_edit(request, pk):
-    match = get_object_or_404(Match, pk=pk)
+    match = get_object_or_404(SingleMatch, pk=pk)
     if request.method == 'POST':
         form = MatchForm(request.POST, instance=match)
         if form.is_valid():
             match = form.save()
-            calculate_standings(match.tournament)
-            update_top_scorers(match.tournament)
+            calculate_standings(match.home_team.tournament)
+            update_top_scorers(match.home_team.tournament)
             return redirect('match_list')
     else:
         form = MatchForm(instance=match)
@@ -119,9 +121,9 @@ def match_edit(request, pk):
 
 @staff_member_required
 def match_delete(request, pk):
-    match = get_object_or_404(Match, pk=pk)
+    match = get_object_or_404(SingleMatch, pk=pk)
     if request.method == 'POST':
-        tournament = match.tournament
+        tournament = match.home_team.tournament
         match.delete()
         calculate_standings(tournament)
         update_top_scorers(tournament)
