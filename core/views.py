@@ -6,33 +6,25 @@ def get_current_tournament():
     return Tournament.objects.first()
 
 def home(request):
+    # Home is now a dashboard
+    return render(request, 'core/home.html')
+
+def standings(request):
     tournament = get_current_tournament()
     teams = []
-    rounds = {'R16': [], 'QF': [], 'SF': [], 'F': []}
-    scorers = []
-    
     if tournament:
-        # Standings Data
         teams = tournament.teams.all().order_by('-goals_scored')
         teams = sorted(teams, key=lambda t: t.goal_difference, reverse=True)
-        
-        # Bracket Data
-        matches = tournament.matches.all().select_related('team_a', 'team_b', 'winner')
-        for m in matches:
-            if m.round in rounds:
-                rounds[m.round].append(m)
-                
-        # Top Scorers Data
-        scorers = TopScorer.objects.filter(team__tournament=tournament).order_by('-goals')[:6] # Show top 6 on home
     
     context = {
         'tournament': tournament,
         'teams': teams,
-        'rounds': rounds,
-        'scorers': scorers,
-        'page': 'home'
+        'page': 'standings'
     }
-    return render(request, 'core/home.html', context)
+    return render(request, 'core/standings.html', context)
+
+def match_generator(request):
+    return render(request, 'core/match_generator.html')
 
 def bracket(request):
     tournament = get_current_tournament()
