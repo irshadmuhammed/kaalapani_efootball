@@ -39,157 +39,58 @@
         <h2 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
             <i class="fas fa-bolt text-yellow-400"></i> Generated Matchups
         </h2>
-        <div id="matchesGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Matches will be injected here -->
+
+        <div class="w-5/12 text-center relative z-10">
+            <div class="w-12 h-12 mx-auto bg-slate-700 rounded-full flex items-center justify-center mb-2 text-2xl">🛡️
+            </div>
+            <div class="font-bold text-white truncate">${team1}</div>
+        </div>
+
+        <div class="w-2/12 text-center relative z-10">
+            <div class="text-2xl font-black text-slate-600 italic">VS</div>
+        </div>
+
+        <div class="w-5/12 text-center relative z-10">
+            <div class="w-12 h-12 mx-auto bg-slate-700 rounded-full flex items-center justify-center mb-2 text-2xl">🛡️
+            </div>
+            <div class="font-bold text-white truncate">${team2}</div>
         </div>
     </div>
-</div>
-
-<script>
-    let teams = [];
-
-    function addTeam() {
-        const input = document.getElementById('teamInput');
-        const name = input.value.trim();
-
-        if (name) {
-            teams.push(name);
-            renderTeams();
-            input.value = '';
-            input.focus();
-        }
-    }
-
-    function removeTeam(index) {
-        teams.splice(index, 1);
-        renderTeams();
-    }
-
-    function renderTeams() {
-        const list = document.getElementById('teamList');
-        const emptyMsg = document.getElementById('emptyMsg');
-        const generateBtn = document.getElementById('generateBtn');
-
-        if (teams.length === 0) {
-            list.innerHTML = '';
-            list.appendChild(emptyMsg);
-            emptyMsg.style.display = 'block';
-            generateBtn.disabled = true;
-        } else {
-            emptyMsg.style.display = 'none';
-            generateBtn.disabled = teams.length < 2;
-
-            list.innerHTML = teams.map((team, index) => `
-                <div class="animate-fadeIn bg-slate-800 text-white px-4 py-2 rounded-lg flex items-center gap-3 border border-white/10 group">
-                    <span>${team}</span>
-                    <button onclick="removeTeam(${index})" class="text-slate-500 hover:text-red-400 transition-colors">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-            `).join('');
-        }
-    }
-
-    async function generateMatches() {
-        const resultsArea = document.getElementById('resultsArea');
-        const matchesGrid = document.getElementById('matchesGrid');
-        const btn = document.getElementById('generateBtn');
-
-        // Animation state
-        btn.disabled = true;
-        btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Shuffling...';
-        resultsArea.classList.add('hidden');
-        matchesGrid.innerHTML = '';
-
-        // Shuffle logic
-        let shuffled = [...teams];
-        for (let i = shuffled.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-        }
-
-        // Fake delay for suspense
-        await new Promise(r => setTimeout(r, 800));
-
-        resultsArea.classList.remove('hidden');
-
-        let html = '';
-        for (let i = 0; i < shuffled.length; i += 2) {
-            if (i + 1 < shuffled.length) {
-                // Pair
-                html += createMatchCard(shuffled[i], shuffled[i + 1], i);
-            } else {
-                // Bye
-                html += createByeCard(shuffled[i], i);
-            }
-        }
-
-        matchesGrid.innerHTML = html;
-
-        // Reset button
-        btn.disabled = false;
-        btn.innerHTML = 'Generate New Matches 🎲';
-
-        // Trigger entrance animations
-        document.querySelectorAll('.match-card').forEach((el, idx) => {
-            setTimeout(() => {
-                el.classList.remove('opacity-0', 'translate-y-4');
-            }, idx * 150);
-        });
-    }
-
-    function createMatchCard(team1, team2, index) {
-        return `
-        <div class="match-card opacity-0 translate-y-4 transition-all duration-500 bg-slate-800/80 border border-white/10 rounded-2xl p-6 flex items-center justify-between relative overflow-hidden group hover:border-pink-500/30">
-            <div class="absolute inset-0 bg-gradient-to-r from-pink-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-            
-            <div class="w-5/12 text-center relative z-10">
-                <div class="w-12 h-12 mx-auto bg-slate-700 rounded-full flex items-center justify-center mb-2 text-2xl">🛡️</div>
-                <div class="font-bold text-white truncate">${team1}</div>
-            </div>
-            
-            <div class="w-2/12 text-center relative z-10">
-                <div class="text-2xl font-black text-slate-600 italic">VS</div>
-            </div>
-            
-            <div class="w-5/12 text-center relative z-10">
-                <div class="w-12 h-12 mx-auto bg-slate-700 rounded-full flex items-center justify-center mb-2 text-2xl">🛡️</div>
-                <div class="font-bold text-white truncate">${team2}</div>
-            </div>
-        </div>
-        `;
+    `;
     }
 
     function createByeCard(team, index) {
-        return `
-        <div class="match-card opacity-0 translate-y-4 transition-all duration-500 bg-slate-800/80 border border-white/10 rounded-2xl p-6 flex items-center justify-center relative overflow-hidden md:col-span-2">
-            <div class="text-center">
-                <div class="inline-block px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-xs font-bold mb-3">BYE - AUTOMATIC ADVANCE</div>
-                <div class="flex items-center gap-4 justify-center">
-                    <span class="text-2xl">🛡️</span>
-                    <span class="text-xl font-bold text-white">${team}</span>
-                </div>
+    return `
+    <div
+        class="match-card opacity-0 translate-y-4 transition-all duration-500 bg-slate-800/80 border border-white/10 rounded-2xl p-6 flex items-center justify-center relative overflow-hidden md:col-span-2">
+        <div class="text-center">
+            <div class="inline-block px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-xs font-bold mb-3">BYE -
+                AUTOMATIC ADVANCE</div>
+            <div class="flex items-center gap-4 justify-center">
+                <span class="text-2xl">🛡️</span>
+                <span class="text-xl font-bold text-white">${team}</span>
             </div>
         </div>
-        `;
+    </div>
+    `;
     }
-</script>
+    </script>
 
-<style>
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-            transform: scale(0.9);
+    <style>
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
 
-        to {
-            opacity: 1;
-            transform: scale(1);
+        .animate-fadeIn {
+            animation: fadeIn 0.2s ease-out forwards;
         }
-    }
-
-    .animate-fadeIn {
-        animation: fadeIn 0.2s ease-out forwards;
-    }
-</style>
-{% endblock %}
+    </style>
+    {% endblock %}

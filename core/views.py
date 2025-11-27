@@ -24,7 +24,11 @@ def standings(request):
     return render(request, 'core/standings.html', context)
 
 def match_generator(request):
-    return render(request, 'core/match_generator.html')
+    tournament = get_current_tournament()
+    teams = []
+    if tournament:
+        teams = list(tournament.teams.values_list('name', flat=True))
+    return render(request, 'core/match_generator.html', {'teams': teams})
 
 def bracket(request):
     tournament = get_current_tournament()

@@ -21,10 +21,11 @@ def create_data():
 
     # Create 16 Teams
     team_names = [
-        "Neon Knights", "Cyber Centurions", "Plasma Panthers", "Quantum Quasars", 
-        "Velocity Vipers", "Galaxy Giants", "Atomic Arrows", "Solar Strikers",
-        "Lunar Legends", "Meteor Mavericks", "Stellar Spartans", "Cosmic Crusaders",
-        "Nebula Ninjas", "Gravity Guardians", "Orbit Outlaws", "Void Voyagers"
+        "Mohammed Musthafa V", "MOHEMMAD FAYAS A A", "SHIJIN SHAJI", "Joshua T Joy", 
+        "Afnan Saleem P A", "Jigmat Nurboo", "Muhammed Misbah", "Vinayak Prakash", 
+        "Abin", "Mohamed Riyan", "Saad", "Vasco", "Athul", "Mithu Thulasi", 
+        "Sarvesh Srinivas", "Akhil Wilson", "Hassan", "Mohammad Ameen CP", 
+        "Jishnu S S", "Saffvan", "Irshad", "Salwin", "Ashwajith", "Vishnu", "Hisham"
     ]
     
     teams = []
@@ -38,12 +39,16 @@ def create_data():
         teams.append(team)
     print(f"Created {len(teams)} teams.")
 
-    # Create Matches (Round of 16)
-    # We need 8 matches for 16 teams
+    # Create Matches (Round of 16) - Just create some random matches for demo
+    # Since we have 25 teams, we can't make a perfect bracket easily in this script without complex logic.
+    # Let's just create 8 matches (16 teams playing) for the R16 to show some data.
     random.shuffle(teams)
     r16_matches = []
     
     print("Creating Round of 16 matches...")
+    # Take first 16 teams for R16
+    playing_teams = teams[:16]
+    
     for i in range(0, 16, 2):
         # Simulate two legs
         leg1_a = random.randint(0, 3)
@@ -53,8 +58,8 @@ def create_data():
         
         m = Match.objects.create(
             tournament=t,
-            team_a=teams[i],
-            team_b=teams[i+1],
+            team_a=playing_teams[i],
+            team_b=playing_teams[i+1],
             score_leg1_a=leg1_a,
             score_leg1_b=leg1_b,
             score_leg2_a=leg2_a,
@@ -67,7 +72,6 @@ def create_data():
         print(f"  {m.team_a} vs {m.team_b}: Agg {m.score_a}-{m.score_b} (Winner: {m.winner})")
 
     # Create Quarter Finals (from R16 winners)
-    # We take winners from R16 matches. If a match was a draw, we pick a random winner for demo purposes.
     qf_teams = []
     for m in r16_matches:
         if m.winner:
@@ -80,25 +84,24 @@ def create_data():
             qf_teams.append(winner)
             
     print(f"Creating Quarter Final matches for {len(qf_teams)} teams...")
-    # Pair them up: Match 1 winner vs Match 2 winner, etc.
-    for i in range(0, 8, 2):
-        if i+1 < len(qf_teams):
-            leg1_a = random.randint(0, 3)
-            leg1_b = random.randint(0, 3)
-            leg2_a = random.randint(0, 3)
-            leg2_b = random.randint(0, 3)
-            
-            m = Match.objects.create(
-                tournament=t,
-                team_a=qf_teams[i],
-                team_b=qf_teams[i+1],
-                score_leg1_a=leg1_a,
-                score_leg1_b=leg1_b,
-                score_leg2_a=leg2_a,
-                score_leg2_b=leg2_b,
-                round='QF'
-            )
-            m.save()
+    # Pair them up
+    for i in range(0, len(qf_teams) - 1, 2): # Ensure even pairing
+        leg1_a = random.randint(0, 3)
+        leg1_b = random.randint(0, 3)
+        leg2_a = random.randint(0, 3)
+        leg2_b = random.randint(0, 3)
+        
+        m = Match.objects.create(
+            tournament=t,
+            team_a=qf_teams[i],
+            team_b=qf_teams[i+1],
+            score_leg1_a=leg1_a,
+            score_leg1_b=leg1_b,
+            score_leg2_a=leg2_a,
+            score_leg2_b=leg2_b,
+            round='QF'
+        )
+        m.save()
 
     # Create Top Scorers
     player_names = ["Ace Striker", "Max Power", "Speedy Gonzalez", "Thunder Kick", "Goal Machine", "Net Buster"]
