@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }} - Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen p-8 flex items-center justify-center">
+    <div class="bg-white rounded-lg shadow-lg p-8 max-w-2xl w-full">
+        <h1 class="text-2xl font-bold text-gray-800 mb-6">{{ title }}</h1>
+
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+            <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-4">
+                <div class="flex">
+                    <div class="ml-3">
+                        <p class="text-sm text-red-700">{{ form.non_field_errors.0 }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Teams -->
+                <div class="space-y-2">
+                    <label class="block text-sm font-medium text-gray-700">Team A Name</label>
+                    {{ form.team_a_name }}
+                    {% if form.team_a_name.errors %}
+                    <p class="text-red-500 text-xs mt-1">{{ form.team_a_name.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <div class="space-y-2">
+                    <label class="block text-sm font-medium text-gray-700">Team B Name</label>
+                    {{ form.team_b_name }}
+                    {% if form.team_b_name.errors %}
+                    <p class="text-red-500 text-xs mt-1">{{ form.team_b_name.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- Round -->
+                <div class="md:col-span-2 space-y-2">
+                    <label class="block text-sm font-medium text-gray-700">Round</label>
+                    {{ form.round }}
+                </div>
+
+                <!-- Leg 1 Scores -->
+                <div class="space-y-2">
+                    <label class="block text-sm font-medium text-gray-700">Leg 1 - Team A Goals</label>
+                    {{ form.score_leg1_a }}
+                </div>
+                <div class="space-y-2">
+                    <label class="block text-sm font-medium text-gray-700">Leg 1 - Team B Goals</label>
+                    {{ form.score_leg1_b }}
+                </div>
+
+                <!-- Leg 2 Scores -->
+                <div class="space-y-2">
+                    <label class="block text-sm font-medium text-gray-700">Leg 2 - Team A Goals</label>
+                    {{ form.score_leg2_a }}
+                </div>
+                <div class="space-y-2">
+                    <label class="block text-sm font-medium text-gray-700">Leg 2 - Team B Goals</label>
+                    {{ form.score_leg2_b }}
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-4 mt-8 pt-6 border-t">
+                <a href="{% url 'match_list' %}" class="px-4 py-2 text-gray-700 hover:text-gray-900">Cancel</a>
+                <button type="submit"
+                    class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded shadow">
+                    Save Match
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <style>
+        .form-control {
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+        }
+    </style>
+</body>
+
+</html>

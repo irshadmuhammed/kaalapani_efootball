@@ -146,3 +146,26 @@ def update_single_match_stats(team_a, score_a, team_b, score_b):
         team_a.points += 1
         team_b.draws += 1
         team_b.points += 1
+
+from .models import TopScorer
+
+def update_top_scorers(tournament):
+    """
+    Recalculates top scorers based on team goals.
+    Since we don't have individual player goal data in the Match model,
+    we assume Team Name = Player Name (as per user context).
+    """
+    if not tournament:
+        return
+        
+    # Clear existing
+    TopScorer.objects.filter(team__tournament=tournament).delete()
+    
+    teams = Team.objects.filter(tournament=tournament)
+    for team in teams:
+        if team.goals_scored > 0:
+            TopScorer.objects.create(
+                player_name=team.name,
+                team=team,
+                goals=team.goals_scored
+            )

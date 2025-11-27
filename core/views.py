@@ -77,3 +77,53 @@ def upcoming_matches(request):
     # Fetch matches that are scheduled but not finished (winner is None)
     matches = Match.objects.filter(winner__isnull=True).select_related('team_a', 'team_b').order_by('id')
     return render(request, 'core/upcoming.html', {'matches': matches})
+
+# --- Custom Admin Views ---
+from django.shortcuts import redirect, get_object_or_404
+from django.contrib.admin.views.decorators import staff_member_required
+from .forms import MatchForm
+from .utils import calculate_standings, update_top_scorers
+
+@staff_member_required
+def match_list(request):
+    matches = Match.objects.all().select_related('team_a', 'team_b').order_by('-id')
+    return render(request, 'core/admin/match_list.html', {'matches': matches})
+
+@staff_member_required
+def match_add(request):
+    if request.method == 'POST':
+        form = MatchForm(request.POST)
+        if form.is_valid():
+            match = form.save()
+            # Auto-recalculate
+            calculate_standings(match.tournament)
+            update_top_scorers(match.tournament)
+            return redirect('match_list')
+    else:
+        form = MatchForm()
+    return render(request, 'core/admin/match_form.html', {'form': form, 'title': 'Add Match'})
+
+@staff_member_required
+def match_edit(request, pk):
+    match = get_object_or_404(Match, pk=pk)
+    if request.method == 'POST':
+        form = MatchForm(request.POST, instance=match)
+        if form.is_valid():
+            match = form.save()
+            calculate_standings(match.tournament)
+            update_top_scorers(match.tournament)
+            return redirect('match_list')
+    else:
+        form = MatchForm(instance=match)
+    return render(request, 'core/admin/match_form.html', {'form': form, 'title': 'Edit Match'})
+
+@staff_member_required
+def match_delete(request, pk):
+    match = get_object_or_404(Match, pk=pk)
+    if request.method == 'POST':
+        tournament = match.tournament
+        match.delete()
+        calculate_standings(tournament)
+        update_top_scorers(tournament)
+        return redirect('match_list')
+    return render(request, 'core/admin/match_confirm_delete.html', {'match': match})
