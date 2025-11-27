@@ -49,100 +49,48 @@
     // Initialize teams from Django context
     let teams = {{ teams| safe }};
 
-    // Initial render if teams exist
-    document.addEventListener('DOMContentLoaded', () => {
-        renderTeams();
-    });
+    // Animation state
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Shuffling...';
+    resultsArea.classList.add('hidden');
+    matchesGrid.innerHTML = '';
 
-    function addTeam() {
-        const input = document.getElementById('teamInput');
-        const name = input.value.trim();
-
-        if (name) {
-            teams.push(name);
-            renderTeams();
-            input.value = '';
-            input.focus();
-        }
+    // Shuffle logic (Fisher-Yates)
+    let shuffled = [...teams];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
     }
 
-    function removeTeam(index) {
-        teams.splice(index, 1);
-        renderTeams();
-    }
+    // Fake delay for suspense
+    await new Promise(r => setTimeout(r, 800));
 
-    function renderTeams() {
-        const list = document.getElementById('teamList');
-        const emptyMsg = document.getElementById('emptyMsg');
-        const generateBtn = document.getElementById('generateBtn');
+    resultsArea.classList.remove('hidden');
 
-        if (teams.length === 0) {
-            list.innerHTML = '';
-            list.appendChild(emptyMsg);
-            emptyMsg.style.display = 'block';
-            generateBtn.disabled = true;
+    let html = '';
+    // Pair teams
+    for (let i = 0; i < shuffled.length; i += 2) {
+        if (i + 1 < shuffled.length) {
+            // Pair: Team A vs Team B
+            html += createMatchCard(shuffled[i], shuffled[i + 1], i);
         } else {
-            emptyMsg.style.display = 'none';
-            generateBtn.disabled = teams.length < 2;
-
-            list.innerHTML = teams.map((team, index) => `
-                <div class="animate-fadeIn bg-slate-800 text-white px-4 py-2 rounded-lg flex items-center gap-3 border border-white/10 group">
-                    <span>${team}</span>
-                    <button onclick="removeTeam(${index})" class="text-slate-500 hover:text-red-400 transition-colors">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-            `).join('');
+            // Odd one out: Bye
+            html += createByeCard(shuffled[i], i);
         }
     }
 
-    async function generateMatches() {
-        const resultsArea = document.getElementById('resultsArea');
-        const matchesGrid = document.getElementById('matchesGrid');
-        const btn = document.getElementById('generateBtn');
+    matchesGrid.innerHTML = html;
 
-        // Animation state
-        btn.disabled = true;
-        btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Shuffling...';
-        resultsArea.classList.add('hidden');
-        matchesGrid.innerHTML = '';
+    // Reset button
+    btn.disabled = false;
+    btn.innerHTML = 'Generate New Matches 🎲';
 
-        // Shuffle logic (Fisher-Yates)
-        let shuffled = [...teams];
-        for (let i = shuffled.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-        }
-
-        // Fake delay for suspense
-        await new Promise(r => setTimeout(r, 800));
-
-        resultsArea.classList.remove('hidden');
-
-        let html = '';
-        // Pair teams
-        for (let i = 0; i < shuffled.length; i += 2) {
-            if (i + 1 < shuffled.length) {
-                // Pair: Team A vs Team B
-                html += createMatchCard(shuffled[i], shuffled[i + 1], i);
-            } else {
-                // Odd one out: Bye
-                html += createByeCard(shuffled[i], i);
-            }
-        }
-
-        matchesGrid.innerHTML = html;
-
-        // Reset button
-        btn.disabled = false;
-        btn.innerHTML = 'Generate New Matches 🎲';
-
-        // Trigger entrance animations
-        document.querySelectorAll('.match-card').forEach((el, idx) => {
-            setTimeout(() => {
-                el.classList.remove('opacity-0', 'translate-y-4');
-            }, idx * 150);
-        });
+    // Trigger entrance animations
+    document.querySelectorAll('.match-card').forEach((el, idx) => {
+        setTimeout(() => {
+            el.classList.remove('opacity-0', 'translate-y-4');
+        }, idx * 150);
+    });
     }
 
     function createMatchCard(team1, team2, index) {
