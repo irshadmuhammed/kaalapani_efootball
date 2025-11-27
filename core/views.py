@@ -13,8 +13,9 @@ def standings(request):
     tournament = get_current_tournament()
     teams = []
     if tournament:
-        teams = tournament.teams.all().order_by('-goals_scored')
-        teams = sorted(teams, key=lambda t: t.goal_difference, reverse=True)
+        # Sort by Points (desc), then Goal Difference (desc), then Goals Scored (desc)
+        teams = tournament.teams.all()
+        teams = sorted(teams, key=lambda t: (t.points, t.goal_difference, t.goals_scored), reverse=True)
     
     context = {
         'tournament': tournament,

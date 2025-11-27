@@ -19,6 +19,11 @@ class Team(models.Model):
     logo = models.ImageField(upload_to='teams/', blank=True, null=True)
     goals_scored = models.IntegerField(default=0)
     goals_conceded = models.IntegerField(default=0)
+    played = models.IntegerField(default=0)
+    wins = models.IntegerField(default=0)
+    draws = models.IntegerField(default=0)
+    losses = models.IntegerField(default=0)
+    points = models.IntegerField(default=0)
 
     @property
     def goal_difference(self):
