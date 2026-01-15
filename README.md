@@ -1,5 +1,7 @@
 # Kaalapani E-football Tournament Management System
 
+![Kaalapani E-football Home Page](docs/home_preview.png)
+
 A comprehensive Django-based web application for managing e-football tournaments, featuring automated standings points calculation, bracket generation, and a dynamic match management system.
 
 ## 🚀 Features
